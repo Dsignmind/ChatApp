@@ -1,0 +1,12 @@
+list { 
+    list-style-type: none;
+    margin: 0;
+    padding: 0 
+}
+li { 
+    padding: 5px 10px 
+        
+}
+li:nthChild(odd) { 
+    background: #eee 
+}

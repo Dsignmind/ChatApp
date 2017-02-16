@@ -1,7 +1,11 @@
 import * as React from 'react';
 
-import { Button } from './Button';
 import { Socket } from './Socket';
+import { MessageForm } from './MessageForm';
+import { MessageList } from './MessageList';
+import { UserList } from './UserList';
+
+
 
 export class Content extends React.Component {
     constructor(props) {
@@ -25,9 +29,10 @@ export class Content extends React.Component {
         );
         return (
             <div>
-                <h1>Random numbers so far!</h1>
-                <ul>{numbers}</ul>
-                <Button />
+                
+                <UserList />
+                <MessageList />
+                <MessageForm />
             </div>
         );
     }
