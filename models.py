@@ -7,8 +7,8 @@ db = flask_sqlalchemy.SQLAlchemy(app.app)
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    img = db.Column(db.String(100))
-    user = db.Column(db.String(30))
+    img = db.Column(db.String(300))
+    user = db.Column(db.String(300))
     text = db.Column(db.String(200))
     
     def __init__ (self, i, u, t):

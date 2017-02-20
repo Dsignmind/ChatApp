@@ -15,12 +15,13 @@ export class MessageList extends React.Component {
         super(props);
         this.state = {
             msgArr: [],
-            messages: {'img': '', 'message_text': '', 'user': ''}
+            messages: {'img': '', 'message_text': '', 'user': ''},
         };
     }
 
     componentDidMount() {
         var msgArr = this.state.msgArr;
+        
         Socket.on('all messages', (data) => {
             this.setState({
                 messages: {
@@ -29,10 +30,16 @@ export class MessageList extends React.Component {
                     'img': data['messages']['img']
                 }
             });
+            console.log(this.state.messages['user']);
             msgArr.push(this.state.messages);
             this.forceUpdate();
         })
-
+        
+        Socket.on('initial setup', (data) => {
+            this.setState({
+                msgArr: data['messages'],
+            });
+        })
         
     }
 

@@ -20,12 +20,7 @@ export class MessageForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    // componentDidMount(){
-    //     this.setState({
-    //         img: this.props.userInfo['img'],
-    //         user: this.props.userInfo['user']
-    //     })
-    // }
+    
     handleChange(event) {
         this.setState({message_text: event.target.value});
     }
@@ -47,20 +42,10 @@ export class MessageForm extends React.Component {
                 });
                 console.log('Sent up the message to server!');
                 this.setState({message_text: '', message_info: []});
+                this.forceUpdate();
             }
         });
-        // var {message_info} = this.state;
-        // message_info.push({
-        //     img: this.state.img, user: this.state.user, message_text: this.state.message_text
-        // });
         
-        // console.log('Generated a message: ', this.state.message_info);
-        // Socket.emit('new message', {
-        //     'facebook_user_token': response.authResponse.accessToken,
-        //     'message': message_info,
-        // });
-        // console.log('Sent up the message to server!');
-        // this.setState({message_text: '', message_info: []});
     }
 
     render() {

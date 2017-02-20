@@ -12,7 +12,8 @@ export class Content extends React.Component {
         super(props);
         this.state = {
             'msgArr': [],
-            'userInfo': []
+            'userInfo': [],
+            'connected' : false
         };
     }
 
@@ -36,6 +37,7 @@ export class Content extends React.Component {
             //console.log(this.state.userInfo['user']);
             this.forceUpdate();
         })
+        this.setState({connected:true});
     }
     
 
@@ -45,7 +47,7 @@ export class Content extends React.Component {
                 
                 <UserList />
                 <MessageList array={this.state.msgArr}/>
-                <MessageForm userInfo={this.state.userInfo}/>
+                <MessageForm />
                 
             </div>
         );

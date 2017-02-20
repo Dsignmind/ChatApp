@@ -13126,7 +13126,8 @@ var Content = exports.Content = function (_React$Component) {
 
         _this.state = {
             'msgArr': [],
-            'userInfo': []
+            'userInfo': [],
+            'connected': false
         };
         return _this;
     }
@@ -13155,6 +13156,7 @@ var Content = exports.Content = function (_React$Component) {
                 //console.log(this.state.userInfo['user']);
                 _this2.forceUpdate();
             });
+            this.setState({ connected: true });
         }
     }, {
         key: 'render',
@@ -13164,7 +13166,7 @@ var Content = exports.Content = function (_React$Component) {
                 null,
                 React.createElement(_UserList.UserList, null),
                 React.createElement(_MessageList.MessageList, { array: this.state.msgArr }),
-                React.createElement(_MessageForm.MessageForm, { userInfo: this.state.userInfo })
+                React.createElement(_MessageForm.MessageForm, null)
             );
         }
     }]);
@@ -13312,13 +13314,6 @@ var MessageForm = exports.MessageForm = function (_React$Component) {
         _this.handleSubmit = _this.handleSubmit.bind(_this);
         return _this;
     }
-    // componentDidMount(){
-    //     this.setState({
-    //         img: this.props.userInfo['img'],
-    //         user: this.props.userInfo['user']
-    //     })
-    // }
-
 
     _createClass(MessageForm, [{
         key: 'handleChange',
@@ -13347,20 +13342,9 @@ var MessageForm = exports.MessageForm = function (_React$Component) {
                     });
                     console.log('Sent up the message to server!');
                     _this2.setState({ message_text: '', message_info: [] });
+                    _this2.forceUpdate();
                 }
             });
-            // var {message_info} = this.state;
-            // message_info.push({
-            //     img: this.state.img, user: this.state.user, message_text: this.state.message_text
-            // });
-
-            // console.log('Generated a message: ', this.state.message_info);
-            // Socket.emit('new message', {
-            //     'facebook_user_token': response.authResponse.accessToken,
-            //     'message': message_info,
-            // });
-            // console.log('Sent up the message to server!');
-            // this.setState({message_text: '', message_info: []});
         }
     }, {
         key: 'render',
@@ -13452,6 +13436,7 @@ var MessageList = exports.MessageList = function (_React$Component) {
             var _this2 = this;
 
             var msgArr = this.state.msgArr;
+
             _Socket.Socket.on('all messages', function (data) {
                 _this2.setState({
                     messages: {
@@ -13460,8 +13445,15 @@ var MessageList = exports.MessageList = function (_React$Component) {
                         'img': data['messages']['img']
                     }
                 });
+                console.log(_this2.state.messages['user']);
                 msgArr.push(_this2.state.messages);
                 _this2.forceUpdate();
+            });
+
+            _Socket.Socket.on('initial setup', function (data) {
+                _this2.setState({
+                    msgArr: data['messages']
+                });
             });
         }
     }, {
