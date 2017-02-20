@@ -10,3 +10,10 @@ li {
 li:nthChild(odd) { 
     background: #eee 
 }
+.message-list .message-image {
+    padding-right: 2rem;
+}
+
+.message-list .message-user {
+    padding-right: 3rem;
+}
