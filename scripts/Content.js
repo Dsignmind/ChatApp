@@ -11,26 +11,41 @@ export class Content extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            'numbers': []
+            'msgArr': [],
+            'userInfo': []
         };
-        Socket.emit('initial connect')
     }
 
     componentDidMount() {
-        Socket.on('all numbers', (data) => {
+        FB.getLoginStatus((response) => {
+            if (response.status == 'connected') {
+                console.log('Initializing connection: ');
+                Socket.emit('initial connect', {
+                    'facebook_user_token': response.authResponse.accessToken,
+                });
+                console.log('Sent authentication token to server!');
+                this.forceUpdate();
+            }
+        });
+        Socket.on('initial setup', (data) => {
             this.setState({
-                'numbers': data['numbers']
+                msgArr: data['messages'],
+                userInfo: data['userInfo']
+                
             });
+            //console.log(this.state.userInfo['user']);
+            this.forceUpdate();
         })
     }
+    
 
     render() {
         return (
             <div>
                 
                 <UserList />
-                <MessageList />
-                <MessageForm />
+                <MessageList array={this.state.msgArr}/>
+                <MessageForm userInfo={this.state.userInfo}/>
                 
             </div>
         );

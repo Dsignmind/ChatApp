@@ -17,3 +17,9 @@ li:nthChild(odd) {
 .message-list .message-user {
     padding-right: 3rem;
 }
+.fb-login-button {
+    float:right;
+}
+.profile-img {
+    border-radius:50%;
+}

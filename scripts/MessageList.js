@@ -7,7 +7,7 @@ const styles = {
     mainList: { float: 'right', width: '80%', height: '90%'},
     messageList: { float: 'right', width: '100%', overflow: 'scroll', height: '87%'},
     messageText: {fontFamily: 'Coming Soon, cursive', fontSize: '1.2em'},
-    listStyle: { listStyleType: 'square' }
+    listStyle: { listStyleType: 'none' }
 }
 
 export class MessageList extends React.Component {
@@ -20,6 +20,7 @@ export class MessageList extends React.Component {
     }
 
     componentDidMount() {
+        var msgArr = this.state.msgArr;
         Socket.on('all messages', (data) => {
             this.setState({
                 messages: {
@@ -28,7 +29,7 @@ export class MessageList extends React.Component {
                     'img': data['messages']['img']
                 }
             });
-            this.state.msgArr.push(this.state.messages);
+            msgArr.push(this.state.messages);
             this.forceUpdate();
         })
 
@@ -38,7 +39,7 @@ export class MessageList extends React.Component {
     render() {
         let display_msgs = this.state.msgArr.map((msg, index) => 
             <li style={styles.messageText} key={index}>
-                <span className="message-image">{msg.img}</span>
+                <span className="message-image"><img className="profile-img" src={msg.img} /></span>
                 <span className="message-user">{msg.user}</span>
                 <span className="message-text">{msg.message_text}</span>
             </li>
@@ -46,6 +47,13 @@ export class MessageList extends React.Component {
 
         return (
             <div style={styles.mainList}>
+                <div
+                 className="fb-login-button"
+                 data-max-rows="1"
+                 data-size="medium"
+                 data-show-faces="false"
+                 data-auto-logout-link="true">
+                 </div>
                 <h1 style={styles.h1}>Messages so far !</h1>
                 <hr/>
                 <div style={styles.messageList}>

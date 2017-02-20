@@ -14,33 +14,53 @@ export class MessageForm extends React.Component {
         super(props);
         this.state = {
             'message_info' : [],
-            img: 'fakeuserimg',
-            user: 'fakeusername',
+            'img': '',
+            'user': '',
             'message_text': ''};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    
+    // componentDidMount(){
+    //     this.setState({
+    //         img: this.props.userInfo['img'],
+    //         user: this.props.userInfo['user']
+    //     })
+    // }
     handleChange(event) {
         this.setState({message_text: event.target.value});
     }
     
     handleSubmit(event) {
         event.preventDefault();
-        // console.log('Generated a message: ', this.state.message_text);
-        // Socket.emit('new message', {
-        //     'message': this.state.message_text,
+        
+        FB.getLoginStatus((response) => {
+            if (response.status == 'connected') {
+                var {message_info} = this.state;
+                message_info.push({
+                    img: this.state.img, user: this.state.user, message_text: this.state.message_text
+                });
+                
+                console.log('Generated a message: ', this.state.message_info);
+                Socket.emit('new message', {
+                    'facebook_user_token': response.authResponse.accessToken,
+                    'message': message_info,
+                });
+                console.log('Sent up the message to server!');
+                this.setState({message_text: '', message_info: []});
+            }
+        });
+        // var {message_info} = this.state;
+        // message_info.push({
+        //     img: this.state.img, user: this.state.user, message_text: this.state.message_text
         // });
-        var {message_info} = this.state;
-        message_info.push({
-            img: this.state.img, user: this.state.user, message_text: this.state.message_text
-        });
-        console.log('Generated a message: ', this.state.message_info);
-        Socket.emit('new message', {
-            'message': message_info,
-        });
-        console.log('Sent up the message to server!');
-        this.setState({message_text: '', message_info: []});
+        
+        // console.log('Generated a message: ', this.state.message_info);
+        // Socket.emit('new message', {
+        //     'facebook_user_token': response.authResponse.accessToken,
+        //     'message': message_info,
+        // });
+        // console.log('Sent up the message to server!');
+        // this.setState({message_text: '', message_info: []});
     }
 
     render() {
