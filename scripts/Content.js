@@ -19,12 +19,13 @@ export class Content extends React.Component {
 
     componentDidMount() {
         FB.getLoginStatus((response) => {
-            if (response.status == 'connected') {
+            if (response.status == 'connected' && this.state.connected == false) {
                 console.log('Initializing connection: ');
                 Socket.emit('initial connect', {
                     'facebook_user_token': response.authResponse.accessToken,
                 });
                 console.log('Sent authentication token to server!');
+                this.setState({connected:true});
                 this.forceUpdate();
             }
         });
@@ -37,7 +38,7 @@ export class Content extends React.Component {
             //console.log(this.state.userInfo['user']);
             this.forceUpdate();
         })
-        this.setState({connected:true});
+        
     }
     
 

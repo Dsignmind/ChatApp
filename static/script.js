@@ -13138,12 +13138,13 @@ var Content = exports.Content = function (_React$Component) {
             var _this2 = this;
 
             FB.getLoginStatus(function (response) {
-                if (response.status == 'connected') {
+                if (response.status == 'connected' && _this2.state.connected == false) {
                     console.log('Initializing connection: ');
                     _Socket.Socket.emit('initial connect', {
                         'facebook_user_token': response.authResponse.accessToken
                     });
                     console.log('Sent authentication token to server!');
+                    _this2.setState({ connected: true });
                     _this2.forceUpdate();
                 }
             });
@@ -13156,7 +13157,6 @@ var Content = exports.Content = function (_React$Component) {
                 //console.log(this.state.userInfo['user']);
                 _this2.forceUpdate();
             });
-            this.setState({ connected: true });
         }
     }, {
         key: 'render',
@@ -13445,7 +13445,7 @@ var MessageList = exports.MessageList = function (_React$Component) {
                         'img': data['messages']['img']
                     }
                 });
-                console.log(_this2.state.messages['user']);
+                //console.log(this.state.messages['user']);
                 msgArr.push(_this2.state.messages);
                 _this2.forceUpdate();
             });

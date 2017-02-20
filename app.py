@@ -20,7 +20,7 @@ def on_initial_connect(data):
     json = response.json()
     data = models.Message.query.all()
     for row in data: 
-        allmsgs.append({'img': json['picture']['data']['url'], 'user': row.user, 'text': row.text})
+        allmsgs.append({'img': json['picture']['data']['url'], 'user': row.user, 'message_text': row.text})
         print row
     
     socketio.emit('initial setup', {'messages': allmsgs, 'userInfo': user_info})
@@ -42,7 +42,7 @@ def on_new_number(data):
         'numbers': all_numbers
     })
     
-all_messages = []
+
 @socketio.on('new message')
 def on_new_message(msg):
     print "Got a new message:", msg
@@ -52,9 +52,9 @@ def on_new_message(msg):
     models.db.session.add(user_info)
     models.db.session.commit()
     models.db.session.close()
-    all_messages.append(msg['message'][0]['message_text'])
     return_msg = {'img': json['picture']['data']['url'], 'user': json['name'], 'message_text': msg['message'][0]['message_text']}
     print return_msg
+    allmsgs.append(return_msg)
     socketio.emit('all messages', {
         'messages': return_msg
     }, broadcast=True)

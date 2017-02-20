@@ -30,7 +30,7 @@ export class MessageList extends React.Component {
                     'img': data['messages']['img']
                 }
             });
-            console.log(this.state.messages['user']);
+            //console.log(this.state.messages['user']);
             msgArr.push(this.state.messages);
             this.forceUpdate();
         })
