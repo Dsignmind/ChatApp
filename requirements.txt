@@ -1,2 +1,5 @@
 Flask
 flask-socketio
+SQLAlchemy
+psycopg2
+requests

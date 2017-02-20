@@ -13,6 +13,9 @@ export class MessageForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            'message_info' : [],
+            img: 'fakeuserimg',
+            user: 'fakeusername',
             'message_text': ''};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,12 +27,20 @@ export class MessageForm extends React.Component {
     
     handleSubmit(event) {
         event.preventDefault();
-        console.log('Generated a message: ', this.state.message_text);
+        // console.log('Generated a message: ', this.state.message_text);
+        // Socket.emit('new message', {
+        //     'message': this.state.message_text,
+        // });
+        var {message_info} = this.state;
+        message_info.push({
+            img: this.state.img, user: this.state.user, message_text: this.state.message_text
+        });
+        console.log('Generated a message: ', this.state.message_info);
         Socket.emit('new message', {
-            'message': this.state.message_text,
+            'message': message_info,
         });
         console.log('Sent up the message to server!');
-        this.setState({message_text: ''});
+        this.setState({message_text: '', message_info: []});
     }
 
     render() {
@@ -37,11 +48,13 @@ export class MessageForm extends React.Component {
             <div>
                 <form style={styles.formBody} onSubmit={this.handleSubmit}>
                     <label>
-                        <input style={styles.formInput}
+                        <input id="messagebox"
+                            style={styles.formInput}
                             placeholder="Enter message..."
                             value={this.state.message_text}
                             onChange={this.handleChange}
                             />
+                        <script>document.getElementById("messagebox").select();</script>
                     </label>
                     <input style={styles.formButton} type="submit" value="Submit" />
                 </form>

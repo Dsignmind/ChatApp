@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { Button } from './Button';
 import { Socket } from './Socket';
 
 const styles = {
@@ -15,28 +14,43 @@ export class MessageList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            'messages': []
+            msgArr: [],
+            messages: {'img': '', 'message_text': '', 'user': ''}
         };
     }
 
     componentDidMount() {
         Socket.on('all messages', (data) => {
             this.setState({
-                'messages': data['messages']
+                messages: {
+                    'message_text': data['messages']['message_text'],
+                    'user': data['messages']['user'], 
+                    'img': data['messages']['img']
+                }
             });
+            this.state.msgArr.push(this.state.messages);
+            this.forceUpdate();
         })
+
+        
     }
 
     render() {
-        let messages = this.state.messages.map(
-            (msg, index) => <li style={styles.messageText} key={index}>{msg}</li>
+        let display_msgs = this.state.msgArr.map((msg, index) => 
+            <li style={styles.messageText} key={index}>
+                <span className="message-image">{msg.img}</span>
+                <span className="message-user">{msg.user}</span>
+                <span className="message-text">{msg.message_text}</span>
+            </li>
         );
+
         return (
             <div style={styles.mainList}>
                 <h1 style={styles.h1}>Messages so far !</h1>
                 <hr/>
                 <div style={styles.messageList}>
-                    <ul style={styles.listStyle}>{messages}</ul>
+                    <ul className="message-list" style={styles.listStyle}>{display_msgs}</ul>
+                    
                 </div>
             </div>
         );

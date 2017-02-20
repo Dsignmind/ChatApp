@@ -13,6 +13,7 @@ export class Content extends React.Component {
         this.state = {
             'numbers': []
         };
+        Socket.emit('initial connect')
     }
 
     componentDidMount() {
@@ -24,15 +25,13 @@ export class Content extends React.Component {
     }
 
     render() {
-        let numbers = this.state.numbers.map(
-            (n, index) => <li key={index}>{n}</li>
-        );
         return (
             <div>
                 
                 <UserList />
                 <MessageList />
                 <MessageForm />
+                
             </div>
         );
     }

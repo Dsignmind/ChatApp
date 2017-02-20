@@ -10,6 +10,12 @@ import models
 def hello():
     return flask.render_template('index.html')
 
+@socketio.on('initial_connect')
+def on_initial_connect():
+    data = models.Message.query.all()
+    all_msg = [{'img': x.img, 'user': x.user, 'text': x.text} for x in data]
+    socketio.emit('event', all_msg)
+    
 @socketio.on('connect')
 def on_connect():
     print 'Someone connected!'
@@ -31,10 +37,20 @@ all_messages = []
 @socketio.on('new message')
 def on_new_message(msg):
     print "Got a new message:", msg
-    all_messages.append(msg['message'])
+    print msg['message'][0]['message_text']
+    user_info = models.Message(msg['message'][0]['img'], msg['message'][0]['user'], msg['message'][0]['message_text'])
+    models.db.session.add(user_info)
+    models.db.session.commit()
+    models.db.session.close()
+    all_messages.append(msg['message'][0]['message_text'])
+    # socketio.emit('all messages', {
+    #     'messages': all_messages
+    # })
+    return_msg = {'img': msg['message'][0]['img'], 'user': msg['message'][0]['user'], 'message_text': msg['message'][0]['message_text']}
+    print return_msg
     socketio.emit('all messages', {
-        'messages': all_messages
-    })
+        'messages': return_msg
+    }, broadcast=True)
 if __name__ == '__main__':
     socketio.run(
         app,
