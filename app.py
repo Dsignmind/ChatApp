@@ -1,29 +1,28 @@
 import os
 import flask
-import flask_socketio
+import flask_socketio 
 import requests
+from flask_socketio import emit
 
 app = flask.Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
 import models
+
+def dbQuery(dbarray):
+    data = models.Message.query.all()
+    for row in data: 
+        dbarray.append({'img': row.img, 'user': row.user, 'message_text': row.text})
 
 @app.route('/')
 def hello():
     return flask.render_template('index.html')
 
 user_info = []
-allmsgs = []
 @socketio.on('initial connect')
-def on_initial_connect(data):
-   # user_info.append({'user': json['name'], 'img': json['picture']['data']['url']})
-    response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + data['facebook_user_token'])
-    json = response.json()
-    data = models.Message.query.all()
-    for row in data: 
-        allmsgs.append({'img': json['picture']['data']['url'], 'user': row.user, 'message_text': row.text})
-        print row
-    
-    socketio.emit('initial setup', {'messages': allmsgs, 'userInfo': user_info})
+def on_initial_connect():
+    allmsgs = []
+    dbQuery(allmsgs)
+    socketio.emit('initial setup', {'messages': allmsgs})
     
 @socketio.on('connect')
 def on_connect():
@@ -45,18 +44,21 @@ def on_new_number(data):
 
 @socketio.on('new message')
 def on_new_message(msg):
+    newmsgs = []
     print "Got a new message:", msg
     response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + msg['facebook_user_token'])
     json = response.json()
-    user_info = models.Message(msg['facebook_user_token'], json['name'], msg['message'][0]['message_text'])
+    user_info = models.Message(json['picture']['data']['url'], json['name'], msg['message'][0]['message_text'])
     models.db.session.add(user_info)
     models.db.session.commit()
     models.db.session.close()
     return_msg = {'img': json['picture']['data']['url'], 'user': json['name'], 'message_text': msg['message'][0]['message_text']}
-    print return_msg
-    allmsgs.append(return_msg)
-    socketio.emit('all messages', {
-        'messages': return_msg
+    dbQuery(newmsgs)
+    # socketio.emit('all messages', {
+    #     'messages': return_msg
+    # }, broadcast=True)
+    socketio.emit('new messages', {
+        'messages': newmsgs
     }, broadcast=True)
     
     

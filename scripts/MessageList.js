@@ -4,7 +4,7 @@ import { Socket } from './Socket';
 
 const styles = {
     h1: { textAlign: 'center', fontFamily: 'Audiowide, cursive'},
-    mainList: { float: 'right', width: '80%', height: '90%'},
+    mainList: { float: 'right', width: '80%', height: '90%', backgroundImage: "url('../static/img/patter.png')"},
     messageList: { float: 'right', width: '100%', overflow: 'scroll', height: '87%'},
     messageText: {fontFamily: 'Coming Soon, cursive', fontSize: '1.2em'},
     listStyle: { listStyleType: 'none' }
@@ -16,23 +16,15 @@ export class MessageList extends React.Component {
         this.state = {
             msgArr: [],
             messages: {'img': '', 'message_text': '', 'user': ''},
+            'connected': false
         };
     }
 
     componentDidMount() {
-        var msgArr = this.state.msgArr;
-        
-        Socket.on('all messages', (data) => {
+        Socket.on('new messages', (data) => {
             this.setState({
-                messages: {
-                    'message_text': data['messages']['message_text'],
-                    'user': data['messages']['user'], 
-                    'img': data['messages']['img']
-                }
+                msgArr: data['messages'],
             });
-            //console.log(this.state.messages['user']);
-            msgArr.push(this.state.messages);
-            this.forceUpdate();
         })
         
         Socket.on('initial setup', (data) => {
@@ -40,8 +32,8 @@ export class MessageList extends React.Component {
                 msgArr: data['messages'],
             });
         })
-        
     }
+    
 
     render() {
         let display_msgs = this.state.msgArr.map((msg, index) => 
@@ -54,12 +46,15 @@ export class MessageList extends React.Component {
 
         return (
             <div style={styles.mainList}>
-                <div
+                <div className="g-signin2" data-theme="dark"></div>
+
+                 <div
                  className="fb-login-button"
                  data-max-rows="1"
                  data-size="medium"
                  data-show-faces="false"
-                 data-auto-logout-link="true">
+                 
+                 data-auto-logout-link="true" >
                  </div>
                 <h1 style={styles.h1}>Messages so far !</h1>
                 <hr/>

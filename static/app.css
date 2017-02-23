@@ -23,3 +23,8 @@ li:nthChild(odd) {
 .profile-img {
     border-radius:50%;
 }
+.g-signin2 {
+    position:absolute;
+    right:0.5%;
+    top:5.9%;
+}

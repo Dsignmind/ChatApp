@@ -16,7 +16,9 @@ export class MessageForm extends React.Component {
             'message_info' : [],
             'img': '',
             'user': '',
-            'message_text': ''};
+            'message_text': '',
+            'connected': false
+        };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -30,23 +32,46 @@ export class MessageForm extends React.Component {
         
         FB.getLoginStatus((response) => {
             if (response.status == 'connected') {
-                var {message_info} = this.state;
-                message_info.push({
-                    img: this.state.img, user: this.state.user, message_text: this.state.message_text
-                });
-                
-                console.log('Generated a message: ', this.state.message_info);
-                Socket.emit('new message', {
-                    'facebook_user_token': response.authResponse.accessToken,
-                    'message': message_info,
-                });
-                console.log('Sent up the message to server!');
-                this.setState({message_text: '', message_info: []});
-                this.forceUpdate();
-            }
+                if(this.state.connected == true) {
+                    var {message_info} = this.state;
+                    message_info.push({
+                        img: this.state.img, user: this.state.user, message_text: this.state.message_text
+                    });
+                    
+                    console.log('Generated a message: ', this.state.message_info);
+                    Socket.emit('new message', {
+                        'facebook_user_token': response.authResponse.accessToken,
+                        'message': message_info
+                    });
+                    console.log('Sent up the message to server!');
+                    this.setState({message_text: '', message_info: []});
+                    this.forceUpdate();
+                } else {
+                    console.log('Initializing connection: ');
+                    Socket.emit('initial connect');
+                    console.log('Sent authentication token to server!');
+                    this.setState({connected: true});
+                }
+             } //else {
+            //     let auth = gapi.auth2.getAuthInstance();
+            //     let user = auth.currentUser.get();
+            //     if(user.isSignedIn()) {
+            //         console.log('Generated a message: ', this.state.message_info);
+            //         Socket.emit('new message', {
+            //         'google_user_token': user.getAuthResponse().id_token,
+            //         'facebook_user_token': '',
+            //         'message': message_info,
+            //     });
+            //     console.log('Sent up the message to server!');
+            //     this.setState({message_text: '', message_info: []});
+            //     this.forceUpdate();
+            //     }
+            // }
         });
-        
-    }
+    
+}
+
+    
 
     render() {
         return (
