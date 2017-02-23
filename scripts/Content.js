@@ -1,27 +1,32 @@
 import * as React from 'react';
-
 import { Socket } from './Socket';
 import { MessageForm } from './MessageForm';
 import { MessageList } from './MessageList';
 import { UserList } from './UserList';
-import ReactDOM from 'react-dom';
-import FacebookLogin from 'react-facebook-login';
-
+/*global FB*/
 
 
 export class Content extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            'msgArr': [],
+            'usersArr': [],
             'userInfo': [],
-            'connected' : false 
+            'connected' : false
         };
     }
 
     componentDidMount() {
-        
+        // FB.getLoginStatus((response) => {
+        //     if (response.status == 'unknown') {
+        //         Socket.emit('del user', {
+        //             'facebook_user_token': response.authResponse.accessToken
+        //         });
+        //         console.log("deleting user from userlist")
+        //     }
+        // });
     }
+    
     
     
         
@@ -34,8 +39,8 @@ export class Content extends React.Component {
             
                 
                 <UserList />
-                <MessageList array={this.state.msgArr}/>
-                <MessageForm connected={this.state.connected}/>
+                <MessageList />
+                <MessageForm />
                 
             </div>
         );

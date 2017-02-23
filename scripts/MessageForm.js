@@ -1,7 +1,7 @@
 // JavaScript Fileimport * as React from 'react';
 import * as React from 'react';
-
 import { Socket } from './Socket';
+/*global FB*/
 
 const styles = {
     formBody: {  background: '#000', padding: '3px', position: 'fixed', bottom:'0' , width: '100%'},
@@ -17,6 +17,7 @@ export class MessageForm extends React.Component {
             'img': '',
             'user': '',
             'message_text': '',
+            'buttonText': "Get History",
             'connected': false
         };
         this.handleChange = this.handleChange.bind(this);
@@ -29,7 +30,6 @@ export class MessageForm extends React.Component {
     
     handleSubmit(event) {
         event.preventDefault();
-        
         FB.getLoginStatus((response) => {
             if (response.status == 'connected') {
                 if(this.state.connected == true) {
@@ -50,7 +50,11 @@ export class MessageForm extends React.Component {
                     console.log('Initializing connection: ');
                     Socket.emit('initial connect');
                     console.log('Sent authentication token to server!');
-                    this.setState({connected: true});
+                    Socket.emit('new user', {
+                        'facebook_user_token': response.authResponse.accessToken
+                    });
+                    console.log("sending new user to server");
+                    this.setState({connected: true, buttonText: "Submit"});
                 }
              } //else {
             //     let auth = gapi.auth2.getAuthInstance();
@@ -71,6 +75,8 @@ export class MessageForm extends React.Component {
     
 }
 
+
+
     
 
     render() {
@@ -86,7 +92,7 @@ export class MessageForm extends React.Component {
                             />
                         <script>document.getElementById("messagebox").select();</script>
                     </label>
-                    <input style={styles.formButton} type="submit" value="Submit" />
+                    <input style={styles.formButton} type="submit" value={this.state.buttonText} />
                 </form>
             </div>
         );
