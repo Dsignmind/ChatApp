@@ -26,18 +26,16 @@ all_words = []
 bot_say_response = ''
 
 WHATSUP_RESPONSES = ["'sup bro", "hey", "*nods*", "hey you get my snap?"]
-HELP_RESPONSE = ["The commands I understand begin with !! followed by: say, help, about, what time is it?, what's up bot?"]
-ABOUT_RESPONSE = ["Welcome to the HelloHello Chat App! I'm here if you need me!"]
-TIME_RESPONSE = "I don't know about where you are but it's " + datetime.now().strftime('%H:%M') + " here."
+HELP_RESPONSE = 'The commands I understand begin with !! followed by: say, help, about, what time is it?, what\'s up bot?'
+ABOUT_RESPONSE = 'Welcome to the HelloHello Chat App! I\'m here if you need me!'
+TIME_RESPONSE = 'I don\'t know about where you are but it\'s ' + datetime.now().strftime('%H:%M') + ' here.'
 
 def check_for_bot(sentence):
     all_words = sentence.split()
     bot_say_response = ''
-    #for word in sentence.words:
-        #all_words.append(word)
     if not all_words[1]:
         print "bot response: no strings passed!"
-        return "Try '!! help' for available commands."
+        return 'Try \'!! help\' for available commands.'
     elif all_words[1] == "what's" and all_words[2] == "up":
         print "bot response: ", random.choice(WHATSUP_RESPONSES)
         return random.choice(WHATSUP_RESPONSES)
@@ -55,7 +53,7 @@ def check_for_bot(sentence):
         return bot_say_response . join(all_words[2:])
     else:
         print "bot response: Unknown command"
-        return "I don't know what you said! Try '!! help' for available commands."
+        return 'I don\'t know what you said! Try "!! help" for available commands.'
         
                 
         
@@ -123,7 +121,6 @@ def on_new_message(msg):
     json = response.json()
     if msg['message'][0]['message_text'][0:2] == "!!":
         name_to_return = "ChatBot"
-        #picture_to_return = "http://cdn.mysitemyway.com/etc-mysitemyway/icons/legacy-previews/icons-256/3d-glossy-blue-orbs-icons-business/075873-3d-glossy-blue-orb-icon-business-robot.png"
         picture_to_return = "static/img/bot.png"
         message_to_return = check_for_bot(msg['message'][0]['message_text'])
     else:
