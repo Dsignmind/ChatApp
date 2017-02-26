@@ -13147,14 +13147,7 @@ var Content = exports.Content = function (_React$Component) {
     _createClass(Content, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            // FB.getLoginStatus((response) => {
-            //     if (response.status == 'unknown') {
-            //         Socket.emit('del user', {
-            //             'facebook_user_token': response.authResponse.accessToken
-            //         });
-            //         console.log("deleting user from userlist")
-            //     }
-            // });
+            FB.Event.subscribe('auth.logout', _Socket.Socket.emit('delete user'));
         }
     }, {
         key: 'render',
@@ -13499,7 +13492,6 @@ var MessageList = exports.MessageList = function (_React$Component) {
                     'data-max-rows': '1',
                     'data-size': 'medium',
                     'data-show-faces': 'false',
-
                     'data-auto-logout-link': 'true' }),
                 React.createElement(
                     'h1',

@@ -4,7 +4,7 @@ import flask_socketio
 import requests
 import random
 from datetime import datetime
-from flask_socketio import emit
+import flask_socketio
 
 app = flask.Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
@@ -78,15 +78,22 @@ def on_connect():
 @socketio.on('disconnect')
 def on_disconnect():
     print 'Someone disconnected!'
+    models.UserList.query.filter_by(sesh_id=flask.request.sid).delete()
+    print 'removing id: ', flask.request.sid
+    models.db.session.commit()
+    models.db.session.close()
 
+session_id = ''
 all_users = []
 @socketio.on('new user')
 def on_new_user(data):
+    session_id = flask.request.sid
     all_users = []
     response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + data['facebook_user_token'])
     json = response.json()
     print "Got new user:", json['name']
-    user_info = models.UserList(json['picture']['data']['url'], json['name'])
+    print "session id is: ", session_id
+    user_info = models.UserList(session_id, json['picture']['data']['url'], json['name'])
     models.db.session.add(user_info)
     models.db.session.commit()
     models.db.session.close()
@@ -94,6 +101,14 @@ def on_new_user(data):
     socketio.emit('all users', {
         'users': all_users
     })
+    
+@socketio.on('delete user')
+def on_delete_user():
+    print 'Deleting user!'
+    models.UserList.query.filter_by(sesh_id=flask.request.sid).delete()
+    print 'removing id: ', flask.request.sid
+    models.db.session.commit()
+    models.db.session.close()
     
 
 @socketio.on('new message')
@@ -103,6 +118,7 @@ def on_new_message(msg):
     picture_to_return = ""
     name_to_return = ""
     print "Got a new message:", msg
+    print "session id is: ", flask.request.sid
     response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + msg['facebook_user_token'])
     json = response.json()
     if msg['message'][0]['message_text'][0:2] == "!!":

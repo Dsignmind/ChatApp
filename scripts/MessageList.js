@@ -53,7 +53,6 @@ export class MessageList extends React.Component {
                  data-max-rows="1"
                  data-size="medium"
                  data-show-faces="false"
-                 
                  data-auto-logout-link="true" >
                  </div>
                 <h1 style={styles.h1}>Messages so far !</h1>

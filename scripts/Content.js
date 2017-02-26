@@ -17,19 +17,9 @@ export class Content extends React.Component {
     }
 
     componentDidMount() {
-        // FB.getLoginStatus((response) => {
-        //     if (response.status == 'unknown') {
-        //         Socket.emit('del user', {
-        //             'facebook_user_token': response.authResponse.accessToken
-        //         });
-        //         console.log("deleting user from userlist")
-        //     }
-        // });
+        FB.Event.subscribe('auth.logout', Socket.emit('delete user'));
+            
     }
-    
-    
-    
-        
     
     
 
