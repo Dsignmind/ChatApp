@@ -4,7 +4,7 @@ import flask_socketio
 import requests
 import random
 from datetime import datetime
-import flask_socketio
+
 
 app = flask.Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
@@ -15,11 +15,13 @@ def dbMsgQuery(dbarray):
     data = models.Message.query.all()
     for row in data: 
         dbarray.append({'img': row.img, 'user': row.user, 'message_text': row.text})
+    return dbarray
         
 def dbUsrQuery(dbarray):
     data = models.UserList.query.all()
     for row in data: 
         dbarray.append({'img': row.img, 'user': row.user})
+    return dbarray
         
 # Chatbot------------------
 all_words = []
@@ -32,27 +34,27 @@ TIME_RESPONSE = 'I don\'t know about where you are but it\'s ' + datetime.now().
 
 def check_for_bot(sentence):
     all_words = sentence.split()
-    bot_say_response = ''
-    if not all_words[1]:
-        print "bot response: no strings passed!"
+    bot_say_response = ' '
+    if len(all_words) == 1:
+        print 'bot response: no strings passed!'
         return 'Try \'!! help\' for available commands.'
     elif all_words[1] == "what's" and all_words[2] == "up":
-        print "bot response: ", random.choice(WHATSUP_RESPONSES)
+        print 'bot response: ', random.choice(WHATSUP_RESPONSES)
         return random.choice(WHATSUP_RESPONSES)
     elif all_words[1] == "help":
-        print "bot response: ", HELP_RESPONSE
+        print 'bot response: ', HELP_RESPONSE
         return HELP_RESPONSE
     elif all_words[1] == "about":
-        print "bot response: ", ABOUT_RESPONSE
+        print 'bot response: ', ABOUT_RESPONSE
         return ABOUT_RESPONSE
     elif all_words[1] == "what" and all_words[2] == "time":
-        print "bot response: ", TIME_RESPONSE
+        print 'bot response: ', TIME_RESPONSE
         return TIME_RESPONSE
     elif all_words[1] == "say":
-        print "bot response: ", bot_say_response . join(all_words[2:])
-        return bot_say_response . join(all_words[2:])
+        print 'bot response: ', bot_say_response . join(all_words[2:])
+        return bot_say_response.join(all_words[2:])
     else:
-        print "bot response: Unknown command"
+        print 'bot response: Unknown command'
         return 'I don\'t know what you said! Try "!! help" for available commands.'
         
                 
@@ -69,9 +71,13 @@ def on_initial_connect():
     dbMsgQuery(allmsgs)
     socketio.emit('initial setup', {'messages': allmsgs})
     
+    
 @socketio.on('connect')
 def on_connect():
     print 'Someone connected!'
+    socketio.emit('server test', {
+        'message': 'Server responding!'
+    })
 
 @socketio.on('disconnect')
 def on_disconnect():
@@ -137,6 +143,54 @@ def on_new_message(msg):
     socketio.emit('new messages', {
         'messages': newmsgs
     }, broadcast=True)
+    
+@socketio.on('test message')
+def on_new_test_message(data):
+    socketio.emit('server sends test data back', {
+        'from server': data
+    })
+    
+
+@socketio.on('test new user')
+def on_new_testuser(data):
+    test_user = []
+    print "Got new test user:", data['user_info']['name']
+    print "session id is: ", data['user_info']['sesh_id']
+    user_info = models.UserList(data['user_info']['sesh_id'], data['user_info']['img'], data['user_info']['name'])
+    models.db.session.add(user_info)
+    models.db.session.commit()
+    models.db.session.close()
+    test_user.append(models.UserList.query.filter_by(sesh_id='1234'))
+    print test_user
+    socketio.emit('server sent test user data', {
+        'users': test_user
+    })
+    
+@socketio.on('test del user')
+def on_del_testuser(data):
+    test_user = []
+    print "Got test user to del:", data['user_info']['name']
+    print "session id is: ", data['user_info']['sesh_id']
+    #user_info = models.UserList(data['user_info']['sesh_id'], data['user_info']['img'], data['user_info']['name'])
+    models.UserList.query.filter_by(sesh_id='1234').delete()
+    models.db.session.commit()
+    models.db.session.close()
+    print test_user
+    socketio.emit('server sent test user data', {
+        'users': 'deleted test user'
+    })
+    
+@socketio.on('test initial connect')
+def on_initial_test_connect():
+    allmsgs = []
+    dbMsgQuery(allmsgs)
+    socketio.emit('initial setup test', {
+        'message': 'Succesful initial connect'
+    })
+    
+@app.route('/test')
+def hello_test():
+    return 'Hello, world!'
     
     
 if __name__ == '__main__':

@@ -25,13 +25,14 @@ export class MessageList extends React.Component {
             this.setState({
                 msgArr: data['messages'],
             });
-        })
+        });
         
         Socket.on('initial setup', (data) => {
             this.setState({
                 msgArr: data['messages'],
             });
-        })
+        });
+        
     }
     
 
