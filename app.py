@@ -5,7 +5,7 @@ import requests
 import random
 import urllib3
 import json
-import pyowm
+
 
 from datetime import datetime
 
