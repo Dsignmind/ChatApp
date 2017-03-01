@@ -6,4 +6,4 @@ psycopg2
 python-socketio
 requests
 requests-oauthlib
-
+urllib3
