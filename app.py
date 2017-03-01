@@ -54,8 +54,8 @@ def check_for_bot(sentence):
     elif all_words[1] == "what" and all_words[2] == "time":
         print 'bot response: ', TIME_RESPONSE
         return TIME_RESPONSE
-    elif all_words[1] =="What" and all_words[2] == "should"and all_words[3] == "I":
-            return 'I don\'t know I\'m a robot! But the weater report says ' + get_weather()
+    elif all_words[1] =="what" and all_words[2] == "should"and all_words[3] == "I":
+            return 'I don\'t know I\'m a robot! But the weather report says ' + get_weather()
     elif all_words[1] == "say":
         print 'bot response: ', bot_say_response . join(all_words[2:])
         return bot_say_response.join(all_words[2:])
@@ -66,8 +66,7 @@ def check_for_bot(sentence):
 #weather api--------------
 def get_weather():
     http = urllib3.PoolManager()
-    WEATHER_API = 'b4c14979ca5799a02542f38099a07f54'
-    DARK_SKY = '48a8e652dae789b91d7d2a9ebc77dd90'
+    DARK_SKY = os.getenv('DARK_SKY')
     getIP = http.request('GET','http://ip-api.com/json/')
     longitude = json.loads(getIP.data)['lon'] 
     latitude = json.loads(getIP.data)['lat']
@@ -149,12 +148,9 @@ def on_new_message(msg):
     print "session id is: ", flask.request.sid
     response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + msg['facebook_user_token'])
     json = response.json()
-    
     picture_to_return = json['picture']['data']['url']
     name_to_return = json['name']
     message_to_return = msg['message'][0]['message_text']
-    # response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + msg['facebook_user_token'])
-    # json = response.json()
     msg_info = models.Message(picture_to_return, name_to_return, message_to_return)
     models.db.session.add(msg_info)
     models.db.session.commit()
@@ -164,6 +160,7 @@ def on_new_message(msg):
         'messages': newmsgs
     }, broadcast=True)
     if msg['message'][0]['message_text'][0:2] == "!!":
+        newmsgs = []
         name_to_return = "ChatBot"
         picture_to_return = "static/img/bot.png"
         message_to_return = check_for_bot(msg['message'][0]['message_text'])
