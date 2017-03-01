@@ -1,7 +1,6 @@
 import unittest
 import sys
-sys.path.append('..')
-from project2 import app
+import app
 
 class SocketIOTests(unittest.TestCase):
     def test_on_connect(self):
@@ -40,7 +39,7 @@ class SocketIOTests(unittest.TestCase):
         response = client.get_received()
         result = response[1]
         self.assertEquals(result['name'], 'server sent test user data')
-        #self.assertEquals(result['args'][0]['users'][0][0], '1234 1234 test_user')
+        
         
     def test_user_del(self):
         client = app.socketio.test_client(app.app)
