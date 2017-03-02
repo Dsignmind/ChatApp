@@ -16,7 +16,7 @@ class ChatbotResponseTest(unittest.TestCase):
         
     def test_help_command(self):
         response = app.check_for_bot('!! help')
-        self.assertEqual('The commands I understand begin with !! followed by: say, help, about, what time is it?, what\'s up bot?', response)
+        self.assertEqual('The commands I understand begin with !! followed by: say, help, about, what time is it?, what\'s up bot?, what should I wear?', response)
 
     def test_say_command(self):
         response = app.check_for_bot('!! say this is a test')
