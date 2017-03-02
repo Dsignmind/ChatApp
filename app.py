@@ -150,7 +150,10 @@ def on_new_message(msg):
     json = response.json()
     picture_to_return = json['picture']['data']['url']
     name_to_return = json['name']
+    
     message_to_return = msg['message'][0]['message_text']
+    # if(message_to_return[-3:] == 'jpg' or message_to_return[-3:] == 'png' or message_to_return[-3:] == 'bmp' or message_to_return[-3:] == 'tiff' or message_to_return[-3:] == 'gif'):
+    #     message_to_return = msg['message'][0]['message_text']
     msg_info = models.Message(picture_to_return, name_to_return, message_to_return)
     models.db.session.add(msg_info)
     models.db.session.commit()

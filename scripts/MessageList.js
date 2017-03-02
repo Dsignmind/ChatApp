@@ -34,14 +34,26 @@ export class MessageList extends React.Component {
         });
         
     }
-    
+    imageRender(message){
+        if(message.substr(0,7) == 'http://' || message.substr(0,8) == 'https://'){
+            if(message.substr(message.length - 3) == 'jpg' || message.substr(message.length - 3) == 'png' || 
+            message.substr(message.length - 3) == 'gif' || message.substr(message.length - 3) == 'bmp' || message.substr(message.length - 3) == 'tiff'){
+                return <span className="message-text"><img src={message} /></span>
+            }else{
+                return <span className="message-text"><a href={message}>{message}</a></span>
+            }
+        }else{
+                return <span className="message-text">{message}</span>
+            }
+        
+    }
 
     render() {
         let display_msgs = this.state.msgArr.map((msg, index) => 
             <li style={styles.messageText} key={index}>
                 <span className="message-image"><img className="profile-img" src={msg.img} /></span>
                 <span className="message-user">{msg.user}</span>
-                <span className="message-text">{msg.message_text}</span>
+                { this.imageRender(msg.message_text) }
             </li>
         );
 

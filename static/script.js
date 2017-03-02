@@ -13459,8 +13459,39 @@ var MessageList = exports.MessageList = function (_React$Component) {
             });
         }
     }, {
+        key: 'imageRender',
+        value: function imageRender(message) {
+            if (message.substr(0, 7) == 'http://' || message.substr(0, 8) == 'https://') {
+                if (message.substr(message.length - 3) == 'jpg' || message.substr(message.length - 3) == 'png' || message.substr(message.length - 3) == 'gif' || message.substr(message.length - 3) == 'bmp' || message.substr(message.length - 3) == 'tiff') {
+                    return React.createElement(
+                        'span',
+                        { className: 'message-text' },
+                        React.createElement('img', { src: message })
+                    );
+                } else {
+                    return React.createElement(
+                        'span',
+                        { className: 'message-text' },
+                        React.createElement(
+                            'a',
+                            { href: message },
+                            message
+                        )
+                    );
+                }
+            } else {
+                return React.createElement(
+                    'span',
+                    { className: 'message-text' },
+                    message
+                );
+            }
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var _this3 = this;
+
             var display_msgs = this.state.msgArr.map(function (msg, index) {
                 return React.createElement(
                     'li',
@@ -13475,11 +13506,7 @@ var MessageList = exports.MessageList = function (_React$Component) {
                         { className: 'message-user' },
                         msg.user
                     ),
-                    React.createElement(
-                        'span',
-                        { className: 'message-text' },
-                        msg.message_text
-                    )
+                    _this3.imageRender(msg.message_text)
                 );
             });
 
