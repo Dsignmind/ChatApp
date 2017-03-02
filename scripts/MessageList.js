@@ -8,7 +8,7 @@ const styles = {
     messageList: { float: 'right', width: '100%', overflow: 'scroll', height: '87%'},
     messageText: {fontFamily: 'Coming Soon, cursive', fontSize: '1.2em'},
     listStyle: { listStyleType: 'none' }
-}
+};
 
 export class MessageList extends React.Component {
     constructor(props) {
@@ -38,12 +38,12 @@ export class MessageList extends React.Component {
         if(message.substr(0,7) == 'http://' || message.substr(0,8) == 'https://'){
             if(message.substr(message.length - 3) == 'jpg' || message.substr(message.length - 3) == 'png' || 
             message.substr(message.length - 3) == 'gif' || message.substr(message.length - 3) == 'bmp' || message.substr(message.length - 3) == 'tiff'){
-                return <span className="message-text"><img src={message} /></span>
+                return <span className="message-text"><img src={message} /></span>;
             }else{
-                return <span className="message-text"><a href={message}>{message}</a></span>
+                return <span className="message-text"><a href={message} target="_blank">{message}</a></span>;
             }
         }else{
-                return <span className="message-text">{message}</span>
+                return <span className="message-text">{message}</span>;
             }
         
     }

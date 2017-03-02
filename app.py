@@ -4,6 +4,7 @@ import flask_socketio
 import requests
 import random
 import urllib3
+import string
 import json
 
 
@@ -42,21 +43,21 @@ def check_for_bot(sentence):
     if len(all_words) == 1:
         print 'bot response: no strings passed!'
         return 'Try \'!! help\' for available commands.'
-    elif all_words[1] == "what's" and all_words[2] == "up":
+    elif all_words[1].lower() == "what's" and all_words[2].lower() == "up":
         print 'bot response: ', random.choice(WHATSUP_RESPONSES)
         return random.choice(WHATSUP_RESPONSES)
-    elif all_words[1] == "help":
+    elif all_words[1].lower() == "help":
         print 'bot response: ', HELP_RESPONSE
         return HELP_RESPONSE
-    elif all_words[1] == "about":
+    elif all_words[1].lower() == "about":
         print 'bot response: ', ABOUT_RESPONSE
         return ABOUT_RESPONSE
-    elif all_words[1] == "what" and all_words[2] == "time":
+    elif all_words[1].lower() == "what" and all_words[2].lower() == "time":
         print 'bot response: ', TIME_RESPONSE
         return TIME_RESPONSE
-    elif all_words[1] =="what" and all_words[2] == "should"and all_words[3] == "I":
+    elif all_words[1].lower() =="what" and all_words[2].lower() == "should"and all_words[3].lower() == "i":
             return 'I don\'t know I\'m a robot! But the weather report says ' + get_weather()
-    elif all_words[1] == "say":
+    elif all_words[1].lower() == "say":
         print 'bot response: ', bot_say_response . join(all_words[2:])
         return bot_say_response.join(all_words[2:])
     else:
@@ -150,10 +151,7 @@ def on_new_message(msg):
     json = response.json()
     picture_to_return = json['picture']['data']['url']
     name_to_return = json['name']
-    
     message_to_return = msg['message'][0]['message_text']
-    # if(message_to_return[-3:] == 'jpg' or message_to_return[-3:] == 'png' or message_to_return[-3:] == 'bmp' or message_to_return[-3:] == 'tiff' or message_to_return[-3:] == 'gif'):
-    #     message_to_return = msg['message'][0]['message_text']
     msg_info = models.Message(picture_to_return, name_to_return, message_to_return)
     models.db.session.add(msg_info)
     models.db.session.commit()

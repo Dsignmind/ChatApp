@@ -13474,7 +13474,7 @@ var MessageList = exports.MessageList = function (_React$Component) {
                         { className: 'message-text' },
                         React.createElement(
                             'a',
-                            { href: message },
+                            { href: message, target: '_blank' },
                             message
                         )
                     );
