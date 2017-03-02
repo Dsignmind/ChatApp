@@ -7,3 +7,4 @@ python-socketio
 requests
 requests-oauthlib
 urllib3
+Flask-Testing
