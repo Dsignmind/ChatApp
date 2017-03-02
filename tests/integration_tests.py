@@ -13,11 +13,7 @@ class ServerIntegrationTest(flask_testing.LiveServerTestCase):
         response = urllib2.urlopen(self.get_server_url())
         self.assertEquals(response.code, 200)
         
-class MyTest(flask_testing.TestCase):
-    def create_app(self):
-        app = Flask(__name__)
-        app.config['TESTING'] = True
-        return app
+
 
 if __name__ == '__main__':
     unittest.main()
