@@ -4,7 +4,7 @@ import { Socket } from './Socket';
 
 const styles = {
     h1: { textAlign: 'center', fontFamily: 'Audiowide, cursive'},
-    userList: { float: 'left', background: 'rgb(220, 223, 224)', width: '20%', height: '90%', borderRadius: '10px'},
+    userList: { float: 'left', overflow: 'scroll', background: 'rgb(220, 223, 224)', width: '20%', height: '90%', borderRadius: '10px'},
     userText: {fontFamily: 'Khand, sans-serif', fontSize: '1.2em'},
     listStyle: { listStyleType: 'none' }
 }
