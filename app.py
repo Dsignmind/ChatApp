@@ -12,9 +12,9 @@ from datetime import datetime
 
 
 app = flask.Flask(__name__)
-#with app.app_context():
-socketio = flask_socketio.SocketIO(app)
-import models
+with app.app_context():
+    socketio = flask_socketio.SocketIO(app)
+    import models
 
 #Database queries-----------
 def dbMsgQuery(dbarray):
