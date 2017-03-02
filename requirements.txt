@@ -7,4 +7,3 @@ python-socketio
 requests
 requests-oauthlib
 urllib3
-string
