@@ -2,7 +2,6 @@ import flask_sqlalchemy, app, os
 
 
 app.app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-#app.app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://chatapp:chatapp@localhost/chatdb'
 db = flask_sqlalchemy.SQLAlchemy(app.app)
 
 class Message(db.Model):
