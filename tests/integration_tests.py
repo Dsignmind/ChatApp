@@ -22,12 +22,14 @@ class TestDatabase(flask_testing.TestCase):
     def create_app(self):
         return app.app
     
-    def testSetUp(self):
-        models.db.create_all()
+    def testChatbotExists(self):
+        #models.db.query_all()
+        models.UserList.query.filter_by(user='Chat-bot')
+        models.db.session.close()
 
-    def testTearDown(self):
-        models.db.session.remove()
-        models.db.drop_all()
+    # def testTearDown(self):
+    #     #models.db.session.remove()
+    #     models.db.session.close()
 
 
 if __name__ == '__main__':
